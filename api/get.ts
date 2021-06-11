@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import * as fetch from 'isomorphic-fetch';
+import fetch from 'node-fetch';
 
 export default async function (req: VercelRequest, res: VercelResponse) {
   const username = req.query.username;
