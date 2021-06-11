@@ -1,11 +1,11 @@
-import * as express from 'express';
+import { VercelRequest, VercelResponse } from '@vercel/node';
 import * as fetch from 'isomorphic-fetch';
 
-const server = express();
+export default async function (req: VercelRequest, res: VercelResponse) {
+  const username = req.query.username;
 
-server.use('/:insta_username', async (req, res, next) => {
   try {
-    const instaPage = await fetch(`https://instagram.com/${req.params.insta_username}`);
+    const instaPage = await fetch(`https://instagram.com/${username}`);
     const rawResult = await instaPage.text()
     const jsonObjectRaw = rawResult.match(/<script type="text\/javascript">window\._sharedData = (.*)<\/script>/)[1].slice(0, -1)
     const jsonObject = JSON.parse(jsonObjectRaw);
@@ -35,7 +35,7 @@ server.use('/:insta_username', async (req, res, next) => {
       }
     } = jsonObject;
     res.json({
-      profileName: req.params.insta_username,
+      profileName: username,
       follower: followerCount,
       following: followingCount,
       niceName,
@@ -50,6 +50,4 @@ server.use('/:insta_username', async (req, res, next) => {
       error: err,
     })
   }
-});
-
-server.listen(4000);
+}
