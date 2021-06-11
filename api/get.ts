@@ -4,11 +4,16 @@ import * as fetch from 'isomorphic-fetch';
 export default async function (req: VercelRequest, res: VercelResponse) {
   const username = req.query.username;
 
+  console.log(username);
+
   try {
+    console.log(`Fetching https://instagram.com/${username}`)
     const instaPage = await fetch(`https://instagram.com/${username}`);
     const rawResult = await instaPage.text()
+    console.log(rawResult)
     const jsonObjectRaw = rawResult.match(/<script type="text\/javascript">window\._sharedData = (.*)<\/script>/)[1].slice(0, -1)
     const jsonObject = JSON.parse(jsonObjectRaw);
+    console.log(jsonObject)
 
     const {
       entry_data: {
